@@ -1,0 +1,112 @@
+# InControl 2 (cloud) endpoints exposed as peplink_ic2_* MCP tools.
+# Tracked SEPARATELY from the official Router API metric — do NOT add to
+# router-api-8.5.2.yaml. Full catalog: raw-sources/docs/peplink/incontrol2/endpoints.md
+# (417 ops); this lists only what we surface.
+
+ic2_tool_count: 17
+
+endpoints:
+  # -- reads (tier: read_only) --
+  - id: ic2_list_orgs
+    method: GET
+    path: /rest/o
+    tier: read_only
+    tool: peplink_ic2_list_orgs
+  - id: ic2_list_groups
+    method: GET
+    path: /rest/o/{org}/g
+    tier: read_only
+    tool: peplink_ic2_list_groups
+  - id: ic2_list_devices
+    method: GET
+    path: /rest/o/{org}/d
+    tier: read_only
+    tool: peplink_ic2_list_devices
+  - id: ic2_get_device_status
+    method: GET
+    path: /rest/o/{org}/g/{grp}/d/{dev}
+    tier: read_only
+    tool: peplink_ic2_get_device_status
+  - id: ic2_get_bandwidth_report
+    method: GET
+    path: /rest/o/{org}/g/{grp}/d/{dev}/bandwidth
+    tier: read_only
+    tool: peplink_ic2_get_bandwidth_report
+  - id: ic2_list_config_backups
+    method: GET
+    path: /rest/o/{org}/g/{grp}/d/{dev}/config_backup
+    tier: read_only
+    tool: peplink_ic2_list_config_backups
+
+  # -- config writes (tier: admin; policy PEPLINK_POLICY_ALLOW_IC2_CONFIG_WRITE; confirm) --
+  - id: ic2_set_vlan_config
+    method: POST
+    path: /rest/o/{org}/g/{grp}/vlan_config
+    tier: admin
+    tool: peplink_ic2_set_vlan_config
+    policy: PEPLINK_POLICY_ALLOW_IC2_CONFIG_WRITE
+  - id: ic2_delete_vlan_config
+    method: DELETE
+    path: /rest/o/{org}/g/{grp}/vlan_config/{id}
+    tier: admin
+    tool: peplink_ic2_delete_vlan_config
+    policy: PEPLINK_POLICY_ALLOW_IC2_CONFIG_WRITE
+  - id: ic2_put_ssid_settings
+    method: PUT
+    path: /rest/o/{org}/g/{grp}/ssid_settings
+    tier: admin
+    tool: peplink_ic2_put_ssid_settings
+    policy: PEPLINK_POLICY_ALLOW_IC2_CONFIG_WRITE
+  - id: ic2_put_ssid_profile
+    method: PUT
+    path: /rest/o/{org}/g/{grp}/ssid_profiles/{ssid_id}
+    tier: admin
+    tool: peplink_ic2_put_ssid_profile
+    policy: PEPLINK_POLICY_ALLOW_IC2_CONFIG_WRITE
+  - id: ic2_put_radio_config
+    method: PUT
+    path: /rest/o/{org}/g/{grp}/put_radio_config
+    tier: admin
+    tool: peplink_ic2_put_radio_config
+    policy: PEPLINK_POLICY_ALLOW_IC2_CONFIG_WRITE
+  - id: ic2_put_firewall_rule_sets
+    method: PUT
+    path: /rest/o/{org}/g/{grp}/firewall_rule_sets
+    tier: admin
+    tool: peplink_ic2_put_firewall_rule_sets
+    policy: PEPLINK_POLICY_ALLOW_IC2_CONFIG_WRITE
+  - id: ic2_put_grouped_mac
+    method: PUT
+    path: /rest/o/{org}/g/{grp}/grouped_mac
+    tier: admin
+    tool: peplink_ic2_put_grouped_mac
+    policy: PEPLINK_POLICY_ALLOW_IC2_CONFIG_WRITE
+  - id: ic2_set_wan_priority
+    method: POST
+    path: /rest/o/{org}/g/{grp}/d/{dev}/wan/priority
+    tier: admin
+    tool: peplink_ic2_set_wan_priority
+    policy: PEPLINK_POLICY_ALLOW_IC2_CONFIG_WRITE
+
+  # -- destructive (tier: admin; dedicated policy; confirm) --
+  - id: ic2_reboot_device
+    method: POST
+    path: /rest/o/{org}/g/{grp}/d/{dev}/tools/reboot
+    tier: admin
+    tool: peplink_ic2_reboot_device
+    destructive: true
+    policy: PEPLINK_POLICY_ALLOW_IC2_REBOOT
+  - id: ic2_factory_reset
+    method: POST
+    path: /rest/o/{org}/g/{grp}/d/{dev}/tools/reset_default
+    tier: admin
+    tool: peplink_ic2_factory_reset
+    destructive: true
+    policy: PEPLINK_POLICY_ALLOW_IC2_FACTORY_RESET
+  - id: ic2_restore_config_backup
+    method: POST
+    path: /rest/o/{org}/g/{grp}/d/{dev}/config_backup/{id}/restore
+    tier: admin
+    tool: peplink_ic2_restore_config_backup
+    destructive: true
+    policy: PEPLINK_POLICY_ALLOW_IC2_CONFIG_RESTORE

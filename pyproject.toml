@@ -1,0 +1,33 @@
+[project]
+name = "peplink-mcp"
+version = "0.0.0"
+description = "Peplink MCP monorepo workspace"
+requires-python = ">=3.12"
+
+[tool.uv.workspace]
+members = [
+    "apps/*",
+    "packages/*",
+]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.pytest.ini_options]
+testpaths = ["packages", "apps", "tests"]
+# Live integration tests (real gear via .env) are deselected by default.
+# Run them with: pytest -m live
+addopts = "-m 'not live'"
+markers = [
+    "live: integration test needing real Peplink gear (targets from .env)",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pyyaml>=6.0",
+    "ruff>=0.8",
+]

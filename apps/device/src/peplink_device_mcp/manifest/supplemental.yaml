@@ -1,0 +1,331 @@
+# Supplemental surfaces — NOT part of official 100% coverage metric.
+# Community/undocumented endpoint surfaces (REST, vendor CGI, NMEA TCP) + AP SNMP.
+
+supplemental_count: 41
+
+endpoints:
+  - id: get_status_traffic
+    method: GET
+    path: /api/status.traffic
+    tier: read_only
+    tool: peplink_supplemental_get_status_traffic
+    source: community
+
+  - id: get_status_bandwidth_usage_client
+    method: GET
+    path: /api/status.bandwidthUsage.client
+    tier: read_only
+    tool: peplink_supplemental_get_status_bandwidth_usage_client
+    source: community
+
+  - id: get_status_wan_latency
+    method: GET
+    path: /api/status.wan.latency
+    tier: read_only
+    tool: peplink_supplemental_get_status_wan_latency
+    source: community
+
+  - id: get_status_log
+    method: GET
+    path: /api/status.log
+    tier: read_only
+    tool: peplink_supplemental_get_status_log
+    source: community
+
+  - id: get_info_frw_version
+    method: GET
+    path: /api/info.frw.version
+    tier: read_only
+    tool: peplink_supplemental_get_info_frw_version
+    source: community
+
+  - id: get_config_admin
+    method: GET
+    path: /api/config.admin
+    tier: read_only
+    tool: peplink_supplemental_get_config_admin
+    source: community
+    notes: Requires config_read tier on gateway; works on SD switches with rouser.
+
+  - id: get_config_incontrol
+    method: GET
+    path: /api/config.incontrol
+    tier: read_only
+    tool: peplink_supplemental_get_config_incontrol
+    source: community
+
+  - id: get_config_lan
+    method: GET
+    path: /api/config.lan
+    tier: read_only
+    tool: peplink_supplemental_get_config_lan
+    source: community
+    notes: Router returns staticRoute/dnsProxy; switch returns VLAN profile ids.
+
+  - id: get_config_snmp_info
+    method: GET
+    path: /api/config.snmp.info
+    tier: read_only
+    tool: peplink_supplemental_get_config_snmp_info
+    source: community
+    notes: Documented in Router API 8.4.1 PDF; confirmed on gateway and switches.
+
+  - id: get_config_pepvpn
+    method: GET
+    path: /api/config.pepvpn
+    tier: read_only
+    tool: peplink_get_config_pepvpn
+    source: community
+    device_kinds: [router, fusionhub]
+    notes: FusionHub hub settings (siteId, healthcheck). Also on MAX gateway.
+
+  - id: get_config_pepvpn_profile
+    method: GET
+    path: /api/config.pepvpn.profile
+    tier: read_only
+    tool: peplink_get_config_pepvpn_profile
+    source: community
+    device_kinds: [router, fusionhub]
+    notes: PepVPN profile definitions; response contains PSKs — MCP redacts secrets.
+
+  - id: get_config_firewall
+    method: GET
+    path: /api/config.firewall
+    tier: read_only
+    tool: peplink_supplemental_get_config_firewall
+    source: community
+    device_kinds: [router, fusionhub]
+
+  - id: get_config_nat_mapping
+    method: GET
+    path: /api/config.natMapping
+    tier: read_only
+    tool: peplink_supplemental_get_config_nat_mapping
+    source: community
+    device_kinds: [router, fusionhub]
+
+  - id: get_config_dhcp
+    method: GET
+    path: /api/config.dhcp
+    tier: read_only
+    tool: peplink_supplemental_get_config_dhcp
+    source: community
+    device_kinds: [router, fusionhub]
+
+  - id: get_config_dns
+    method: GET
+    path: /api/config.dns
+    tier: read_only
+    tool: peplink_supplemental_get_config_dns
+    source: community
+    device_kinds: [router, fusionhub]
+
+  - id: get_config_schedule
+    method: GET
+    path: /api/config.schedule
+    tier: read_only
+    tool: peplink_supplemental_get_config_schedule
+    source: community
+    device_kinds: [router, fusionhub]
+
+  - id: get_config_wan
+    method: GET
+    path: /api/config.wan
+    tier: read_only
+    tool: peplink_supplemental_get_config_wan
+    source: community
+    device_kinds: [router, fusionhub]
+    notes: WAN profile shell; distinct from config.wan.connection.
+
+  - id: get_config_gpio
+    method: GET
+    path: /api/config.gpio
+    tier: read_only
+    tool: peplink_get_config_gpio
+    source: community
+    device_kinds: [router, fusionhub]
+
+  - id: get_config_wan_connection_priority
+    method: GET
+    path: /api/config.wan.connection.priority
+    tier: read_only
+    tool: peplink_get_config_wan_connection_priority
+    source: community
+    device_kinds: [router, fusionhub]
+
+  - id: get_status_wan
+    method: GET
+    path: /api/status.wan
+    tier: read_only
+    tool: peplink_supplemental_get_status_wan
+    source: community
+    device_kinds: [router, fusionhub]
+
+  - id: get_status_lan
+    method: GET
+    path: /api/status.lan
+    tier: read_only
+    tool: peplink_supplemental_get_status_lan
+    source: community
+    device_kinds: [router, fusionhub]
+
+  - id: get_status_cpu
+    method: GET
+    path: /api/status.cpu
+    tier: read_only
+    tool: peplink_supplemental_get_status_cpu
+    source: community
+    device_kinds: [router, fusionhub]
+
+  - id: get_cmd_ap_support
+    method: GET
+    path: /api/cmd.ap
+    tier: read_only
+    tool: peplink_get_cmd_ap_support
+    source: community
+    device_kinds: [router, fusionhub]
+
+  # Community config POST — not in the Router API 8.5.2 PDF; paired with the GET tools above.
+  - id: post_config_pepvpn
+    method: POST
+    path: /api/config.pepvpn
+    tier: admin
+    tool: peplink_post_config_pepvpn
+    source: community
+    device_kinds: [router, fusionhub]
+    notes: FusionHub hub PepVPN settings (siteId, healthcheck, etc.).
+
+  - id: post_config_pepvpn_profile
+    method: POST
+    path: /api/config.pepvpn.profile
+    tier: admin
+    tool: peplink_post_config_pepvpn_profile
+    source: community
+    device_kinds: [router, fusionhub]
+    notes: PepVPN profile definitions; body may contain PSKs — handle as secret.
+
+  - id: post_config_firewall
+    method: POST
+    path: /api/config.firewall
+    tier: admin
+    tool: peplink_post_config_firewall
+    source: community
+    device_kinds: [router, fusionhub]
+
+  - id: post_config_lan
+    method: POST
+    path: /api/config.lan
+    tier: admin
+    tool: peplink_post_config_lan
+    source: community
+    device_kinds: [router, fusionhub]
+
+  - id: post_config_nat_mapping
+    method: POST
+    path: /api/config.natMapping
+    tier: admin
+    tool: peplink_post_config_nat_mapping
+    source: community
+    device_kinds: [router, fusionhub]
+
+  - id: post_config_dhcp
+    method: POST
+    path: /api/config.dhcp
+    tier: admin
+    tool: peplink_post_config_dhcp
+    source: community
+    device_kinds: [router, fusionhub]
+
+  - id: post_config_dns
+    method: POST
+    path: /api/config.dns
+    tier: admin
+    tool: peplink_post_config_dns
+    source: community
+    device_kinds: [router, fusionhub]
+
+  - id: post_config_schedule
+    method: POST
+    path: /api/config.schedule
+    tier: admin
+    tool: peplink_post_config_schedule
+    source: community
+    device_kinds: [router, fusionhub]
+
+  - id: post_config_wan
+    method: POST
+    path: /api/config.wan
+    tier: admin
+    tool: peplink_post_config_wan
+    source: community
+    device_kinds: [router, fusionhub]
+    notes: WAN profile shell; distinct from config.wan.connection.
+
+  - id: post_config_admin
+    method: POST
+    path: /api/config.admin
+    tier: admin
+    tool: peplink_post_config_admin
+    source: community
+    notes: Admin/management settings; also accepted on SD switches.
+
+  - id: post_config_incontrol
+    method: POST
+    path: /api/config.incontrol
+    tier: admin
+    tool: peplink_post_config_incontrol
+    source: community
+
+  - id: nmea_gps_stream
+    method: TCP
+    path: ":60660"
+    tier: read_only
+    tool: peplink_supplemental_nmea_gps_read
+    source: nmea
+
+  - id: probe_device_api
+    method: GET
+    path: /api/status
+    tier: read_only
+    tool: peplink_probe_device_api
+    source: probe
+
+  - id: snmp_ap_wlan_clients
+    method: SNMP
+    path: "1.3.6.1.4.1.27662.200.1.1.6"
+    tier: read_only
+    tool: peplink_get_status_client
+    source: snmp
+    kind: ap
+
+  - id: snmp_ap_device_status
+    method: SNMP
+    path: "1.3.6.1.4.1.27662.200.1.1.1"
+    tier: read_only
+    tool: peplink_get_status_device
+    source: snmp
+    kind: ap
+
+  - id: snmp_ap_wlan_summary
+    method: SNMP
+    path: "1.3.6.1.4.1.27662.200.1.1.4.1"
+    tier: read_only
+    tool: peplink_get_status_wlan
+    source: snmp
+    kind: ap
+
+  - id: snmp_ap_lan_profile
+    method: SNMP
+    path: "1.3.6.1.4.1.27662.200.1.1.2"
+    tier: read_only
+    tool: peplink_get_status_lan_profile
+    source: snmp
+    kind: ap
+
+  - id: snmp_ap_ssid_config
+    method: SNMP
+    path: "1.3.6.1.4.1.27662.200.1.1.4.2"
+    tier: config_read
+    tool: peplink_get_config_ssid_profile
+    source: snmp
+    kind: ap

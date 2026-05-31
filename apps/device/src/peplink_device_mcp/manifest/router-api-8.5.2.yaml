@@ -1,0 +1,454 @@
+# Official Peplink Router REST API — firmware 8.5.2 PDF reference list.
+# Source: Peplink-Router-API-Documentation-for-Firmware-8.5.2
+# Coverage CI requires every entry to have a registered MCP tool.
+
+api_version: "8.5.2"
+official_count: 59
+
+endpoints:
+  # --- auth (7) ---
+  - id: post_login
+    method: POST
+    path: /api/login
+    tier: admin
+    tool: peplink_post_login
+    device_kinds: [router, fusionhub, switch, ap]
+
+  - id: post_logout
+    method: POST
+    path: /api/logout
+    tier: admin
+    tool: peplink_post_logout
+    device_kinds: [router, fusionhub, switch, ap]
+
+  - id: get_auth_client
+    method: GET
+    path: /api/auth.client
+    tier: admin
+    tool: peplink_get_auth_client
+    device_kinds: [router, fusionhub]
+
+  - id: post_auth_client
+    method: POST
+    path: /api/auth.client
+    tier: admin
+    policy: PEPLINK_POLICY_ALLOW_AUTH_CLIENT_MUTATE
+    tool: peplink_post_auth_client
+    device_kinds: [router, fusionhub]
+
+  - id: get_auth_client_token
+    method: GET
+    path: /api/auth.client.token
+    tier: admin
+    tool: peplink_get_auth_client_token
+    device_kinds: [router, fusionhub]
+
+  - id: post_auth_token_grant
+    method: POST
+    path: /api/auth.token.grant
+    tier: admin
+    tool: peplink_post_auth_token_grant
+    device_kinds: [router, fusionhub, switch, ap]
+
+  - id: post_auth_token_revoke
+    method: POST
+    path: /api/auth.token.revoke
+    tier: admin
+    tool: peplink_post_auth_token_revoke
+    device_kinds: [router, fusionhub]
+
+  # --- cmd (28) ---
+  - id: post_cmd_billing_new_cycle
+    method: POST
+    path: /api/cmd.billing.newCycle
+    tier: admin
+    tool: peplink_post_cmd_billing_new_cycle
+    device_kinds: [router, fusionhub]
+
+  - id: get_cmd_carrier_scan
+    method: GET
+    path: /api/cmd.carrier.scan
+    tier: read_only
+    tool: peplink_get_cmd_carrier_scan
+    device_kinds: [router, fusionhub]
+
+  - id: post_cmd_carrier_scan
+    method: POST
+    path: /api/cmd.carrier.scan
+    tier: admin
+    tool: peplink_post_cmd_carrier_scan
+    device_kinds: [router, fusionhub]
+
+  - id: post_cmd_carrier_select
+    method: POST
+    path: /api/cmd.carrier.select
+    tier: admin
+    tool: peplink_post_cmd_carrier_select
+    device_kinds: [router, fusionhub]
+
+  - id: post_cmd_channel_pci_lock
+    method: POST
+    path: /api/cmd.channelPci.lock
+    tier: admin
+    tool: peplink_post_cmd_channel_pci_lock
+    device_kinds: [router, fusionhub]
+
+  - id: post_cmd_channel_pci_scan
+    method: POST
+    path: /api/cmd.channelPci.scan
+    tier: admin
+    tool: peplink_post_cmd_channel_pci_scan
+    device_kinds: [router, fusionhub]
+
+  - id: post_cmd_config_apply
+    method: POST
+    path: /api/cmd.config.apply
+    tier: admin
+    policy: PEPLINK_POLICY_ALLOW_CONFIG_APPLY
+    destructive: true
+    tool: peplink_post_cmd_config_apply
+    device_kinds: [router, fusionhub]
+
+  - id: post_cmd_config_discard
+    method: POST
+    path: /api/cmd.config.discard
+    tier: admin
+    tool: peplink_post_cmd_config_discard
+    device_kinds: [router, fusionhub]
+
+  - id: post_cmd_mesh_discover
+    method: POST
+    path: /api/cmd.mesh.discover
+    tier: admin
+    tool: peplink_post_cmd_mesh_discover
+    device_kinds: [router, fusionhub]
+    async_poll: /api/cmd.mesh.discover.result
+
+  - id: get_cmd_mesh_discover_result
+    method: GET
+    path: /api/cmd.mesh.discover.result
+    tier: read_only
+    tool: peplink_get_cmd_mesh_discover_result
+    device_kinds: [router, fusionhub]
+
+  - id: post_cmd_mesh_request
+    method: POST
+    path: /api/cmd.mesh.request
+    tier: admin
+    tool: peplink_post_cmd_mesh_request
+    device_kinds: [router, fusionhub]
+
+  - id: post_cmd_port_poe_disable
+    method: POST
+    path: /api/cmd.port.poe.disable
+    tier: admin
+    tool: peplink_post_cmd_port_poe_disable
+    device_kinds: [router, fusionhub, switch]
+
+  - id: post_cmd_port_poe_enable
+    method: POST
+    path: /api/cmd.port.poe.enable
+    tier: admin
+    tool: peplink_post_cmd_port_poe_enable
+    device_kinds: [router, fusionhub, switch]
+
+  - id: post_cmd_sim_ussd_send
+    method: POST
+    path: /api/cmd.sim.ussd.send
+    tier: admin
+    tool: peplink_post_cmd_sim_ussd_send
+    device_kinds: [router, fusionhub]
+
+  - id: post_cmd_sms_delete
+    method: POST
+    path: /api/cmd.sms.delete
+    tier: admin
+    tool: peplink_post_cmd_sms_delete
+    device_kinds: [router, fusionhub]
+
+  - id: get_cmd_sms_get
+    method: GET
+    path: /api/cmd.sms.get
+    tier: read_only
+    tool: peplink_get_cmd_sms_get
+    device_kinds: [router, fusionhub]
+
+  - id: post_cmd_sms_send_message
+    method: POST
+    path: /api/cmd.sms.sendMessage
+    tier: admin
+    policy: PEPLINK_POLICY_ALLOW_SMS_SEND
+    destructive: true
+    tool: peplink_post_cmd_sms_send_message
+    device_kinds: [router, fusionhub]
+
+  - id: post_cmd_starlink
+    method: POST
+    path: /api/cmd.starlink
+    tier: admin
+    tool: peplink_post_cmd_starlink
+    device_kinds: [router, fusionhub]
+
+  - id: get_cmd_ap
+    method: GET
+    path: /api/cmd.ap
+    tier: read_only
+    tool: peplink_get_cmd_ap
+    device_kinds: [router, fusionhub]
+
+  - id: post_cmd_ap
+    method: POST
+    path: /api/cmd.ap
+    tier: admin
+    tool: peplink_post_cmd_ap
+    device_kinds: [router, fusionhub]
+
+  - id: post_cmd_cellular_module_rescan_network
+    method: POST
+    path: /api/cmd.cellularModule.rescanNetwork
+    tier: admin
+    tool: peplink_post_cmd_cellular_module_rescan_network
+    device_kinds: [router, fusionhub]
+
+  - id: post_cmd_cellular_module_reset
+    method: POST
+    path: /api/cmd.cellularModule.reset
+    tier: admin
+    destructive: true
+    tool: peplink_post_cmd_cellular_module_reset
+    device_kinds: [router, fusionhub]
+
+  - id: post_cmd_system_reboot
+    method: POST
+    path: /api/cmd.system.reboot
+    tier: admin
+    policy: PEPLINK_POLICY_ALLOW_SYSTEM_REBOOT
+    destructive: true
+    tool: peplink_post_cmd_system_reboot
+    device_kinds: [router, fusionhub, switch, ap]
+
+  - id: post_cmd_wan_cellular
+    method: POST
+    path: /api/cmd.wan.cellular
+    tier: admin
+    tool: peplink_post_cmd_wan_cellular
+    device_kinds: [router, fusionhub]
+
+  - id: post_cmd_wifi_connect
+    method: POST
+    path: /api/cmd.wifi.connect
+    tier: admin
+    tool: peplink_post_cmd_wifi_connect
+    device_kinds: [router, fusionhub]
+
+  - id: post_cmd_wifi_disconnect
+    method: POST
+    path: /api/cmd.wifi.disconnect
+    tier: admin
+    tool: peplink_post_cmd_wifi_disconnect
+    device_kinds: [router, fusionhub]
+
+  - id: post_cmd_wifi_forget
+    method: POST
+    path: /api/cmd.wifi.forget
+    tier: admin
+    tool: peplink_post_cmd_wifi_forget
+    device_kinds: [router, fusionhub]
+
+  - id: get_cmd_wifi_result
+    method: GET
+    path: /api/cmd.wifi.result
+    tier: read_only
+    tool: peplink_get_cmd_wifi_result
+    device_kinds: [router, fusionhub]
+
+  - id: get_cmd_wifi_scan
+    method: GET
+    path: /api/cmd.wifi.scan
+    tier: read_only
+    tool: peplink_get_cmd_wifi_scan
+    device_kinds: [router, fusionhub]
+    async_poll: /api/cmd.wifi.result
+
+  # --- config (10) ---
+  - id: post_config_gpio
+    method: POST
+    path: /api/config.gpio
+    tier: admin
+    tool: peplink_post_config_gpio
+    device_kinds: [router, fusionhub]
+
+  - id: get_config_mesh
+    method: GET
+    path: /api/config.mesh
+    tier: read_only
+    tool: peplink_get_config_mesh
+    device_kinds: [router]
+    notes: Not supported on FusionHub.
+
+  - id: post_config_mesh
+    method: POST
+    path: /api/config.mesh
+    tier: admin
+    tool: peplink_post_config_mesh
+    device_kinds: [router]
+
+  - id: get_config_port
+    method: GET
+    path: /api/config.port
+    tier: read_only
+    tool: peplink_get_config_port
+    device_kinds: [router, fusionhub, switch]
+    notes: Switch Controller managed switches are configured via gateway POST; GET works on gateway and switch.
+
+  - id: post_config_port
+    method: POST
+    path: /api/config.port
+    tier: admin
+    tool: peplink_post_config_port
+    device_kinds: [router, fusionhub]
+    notes: Gateway Switch Controller port/VLAN writes use moduleType/moduleId/portId addressing.
+
+  - id: get_config_speedfusion_connect_protect
+    method: GET
+    path: /api/config.speedfusionConnectProtect
+    tier: read_only
+    tool: peplink_get_config_speedfusion_connect_protect
+    device_kinds: [router]
+    notes: Unsupported request on FusionHub.
+
+  - id: post_config_speedfusion_connect_protect
+    method: POST
+    path: /api/config.speedfusionConnectProtect
+    tier: admin
+    tool: peplink_post_config_speedfusion_connect_protect
+    device_kinds: [router]
+
+  - id: get_config_ssid_profile
+    method: GET
+    path: /api/config.ssid.profile
+    tier: read_only
+    tool: peplink_get_config_ssid_profile
+    device_kinds: [router, fusionhub]
+
+  - id: post_config_ssid_profile
+    method: POST
+    path: /api/config.ssid.profile
+    tier: admin
+    tool: peplink_post_config_ssid_profile
+    device_kinds: [router, fusionhub]
+
+  - id: get_config_wan_connection
+    method: GET
+    path: /api/config.wan.connection
+    tier: read_only
+    tool: peplink_get_config_wan_connection
+    device_kinds: [router, fusionhub]
+
+  - id: post_config_wan_connection
+    method: POST
+    path: /api/config.wan.connection
+    tier: admin
+    policy: PEPLINK_POLICY_ALLOW_CONFIG_APPLY
+    destructive: true
+    tool: peplink_post_config_wan_connection
+    device_kinds: [router, fusionhub]
+
+  - id: post_config_wan_connection_priority
+    method: POST
+    path: /api/config.wan.connection.priority
+    tier: admin
+    policy: PEPLINK_POLICY_ALLOW_WAN_DISABLE
+    destructive: true
+    tool: peplink_post_config_wan_connection_priority
+    device_kinds: [router, fusionhub]
+
+  # --- info (2) ---
+  - id: get_info_firmware
+    method: GET
+    path: /api/info.firmware
+    tier: read_only
+    tool: peplink_get_info_firmware
+    device_kinds: [router, fusionhub, switch, ap]
+
+  - id: get_info_location
+    method: GET
+    path: /api/info.location
+    tier: read_only
+    tool: peplink_get_info_location
+    device_kinds: [router]
+    notes: unknown function on FusionHub.
+
+  # --- status (9) ---
+  - id: post_status_cellular_module_temperature
+    method: POST
+    path: /api/status.cellularModule.temperature
+    tier: admin
+    tool: peplink_post_status_cellular_module_temperature
+    device_kinds: [router, fusionhub]
+
+  - id: get_status_client
+    method: GET
+    path: /api/status.client
+    tier: read_only
+    tool: peplink_get_status_client
+    device_kinds: [router, fusionhub]
+
+  - id: get_status_extap_mesh
+    method: GET
+    path: /api/status.extap.mesh
+    tier: read_only
+    tool: peplink_get_status_extap_mesh
+    device_kinds: [router, fusionhub]
+
+  - id: get_status_extap_mesh_link
+    method: GET
+    path: /api/status.extap.mesh.link
+    tier: read_only
+    tool: peplink_get_status_extap_mesh_link
+    device_kinds: [router, fusionhub]
+
+  - id: get_status_lan_profile
+    method: GET
+    path: /api/status.lan.profile
+    tier: read_only
+    tool: peplink_get_status_lan_profile
+    device_kinds: [router, fusionhub]
+
+  - id: get_status_port
+    method: GET
+    path: /api/status.port
+    tier: read_only
+    tool: peplink_get_status_port
+    device_kinds: [router, fusionhub]
+    notes: Port link status on gateway/router; Switch Controller switch ports appear when adopted.
+
+  - id: get_status_pepvpn
+    method: GET
+    path: /api/status.pepvpn
+    tier: read_only
+    tool: peplink_get_status_pepvpn
+    device_kinds: [router, fusionhub]
+
+  - id: get_status_wan_connection
+    method: GET
+    path: /api/status.wan.connection
+    tier: read_only
+    tool: peplink_get_status_wan_connection
+    device_kinds: [router, fusionhub]
+
+  - id: get_status_wan_connection_allowance
+    method: GET
+    path: /api/status.wan.connection.allowance
+    tier: read_only
+    tool: peplink_get_status_wan_connection_allowance
+    device_kinds: [router, fusionhub]
+
+  # --- escape hatch (not in PDF list; required for full param coverage) ---
+  - id: invoke
+    method: ANY
+    path: /api/*
+    tier: inferred
+    tool: peplink_invoke
+    device_kinds: [router, fusionhub, switch, ap]
+    coverage_exempt: true

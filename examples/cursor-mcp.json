@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "peplink-device": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--directory",
+        "/path/to/peplink-mcp",
+        "peplink-device-mcp",
+        "serve",
+        "--config",
+        "/path/to/config.yaml",
+        "--secrets",
+        "/path/to/secrets.yaml"
+      ]
+    }
+  }
+}

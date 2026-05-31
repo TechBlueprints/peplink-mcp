@@ -1,0 +1,99 @@
+# Example fleet metadata (non-secret). Pair with secrets.yaml (per-device credentials).
+# All values here are placeholders — replace with your own.
+#
+# Device kinds: router | fusionhub | switch | ap  — see docs/quickstart.md
+#
+# Gateway pattern:
+#   - Set defaults.gateway_id to the router you can reach directly (static host).
+#   - Other devices use discover.match; their IPs are resolved from the gateway at
+#     startup via read-only mesh status APIs.
+#   - Switches/APs under the gateway's controller set management: gateway.
+#
+# InControl 2 (optional):
+#   - Add ic2: { serial: "<device serial>" } to map a device to its IC2 identity, or
+#     run `peplink-device-mcp ic2-sync` to propose mappings.
+#   - site: groups devices (e.g. main / branch / mobile); gateway-managed devices
+#     inherit their gateway's site.
+
+server:
+  host: 0.0.0.0
+  port: 8080
+  tool_mode: lazy
+
+defaults:
+  device_id: gateway
+  gateway_id: gateway
+
+logging:
+  level: info
+
+devices:
+  gateway:
+    host: 192.0.2.1
+    port: 443
+    verify_tls: false
+    kind: router
+    site: main
+    ic2:
+      serial: "REPLACE-WITH-DEVICE-SERIAL"
+
+  branch-router:
+    discover:
+      match:
+        model: "MAX BR1 Pro 5G"
+    kind: router
+    site: branch
+
+  hub:
+    host: 192.0.2.10
+    port: 443
+    verify_tls: false
+    kind: fusionhub
+    site: main
+
+  switch-1:
+    discover:
+      via: gateway
+      match:
+        name: switch-1
+    kind: switch
+    management: gateway
+
+  ap-1:
+    discover:
+      via: gateway
+      match:
+        client_type: "18"
+        name: ap-1
+    kind: ap
+    management: direct
+
+  # InControl 2-only device (cloud-managed; no LAN host/discover/auth needed).
+  cloud-ap:
+    kind: ap
+    site: branch
+    ic2:
+      serial: "REPLACE-WITH-DEVICE-SERIAL"
+
+# MCP API keys authenticate callers over the HTTP transport (Authorization: Bearer
+# <secret>) and bind each to a tier. Secrets live in secrets.yaml under mcp_keys.
+# Mint a key with: peplink-device-mcp keys generate --id NAME --tier read_only|admin
+mcp_keys:
+  - id: local-readonly
+    key_ref: mcp_keys.local_readonly
+    tier: read_only
+    description: "Local agent — read-only tools"
+  - id: ops-admin
+    key_ref: mcp_keys.ops_admin
+    tier: admin
+    description: "Ops automation — admin write/cmd tools"
+
+# InControl 2 (Peplink cloud) — enables peplink_ic2_* tools (fleet inventory/status
+# plus InControl-managed config). Credentials live in secrets.yaml under incontrol2.
+# Disabled by default; set enabled: true and supply credentials to turn it on.
+# Destructive IC2 ops also need a PEPLINK_POLICY_ALLOW_IC2_* env flag + confirm=true.
+incontrol2:
+  enabled: false
+  base_url: https://api.ic.peplink.com
+  default_org_id: null      # set to your IC2 organization id to scope group/device tools
+  default_group_id: null

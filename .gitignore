@@ -1,0 +1,28 @@
+raw-sources/
+llm-docs/
+.venv/
+scripts/output/
+
+# Local real config + secrets (never commit). Examples live in examples/config/.
+/config.yaml
+/secrets.yaml
+/secrets*.yaml
+/config.local.yaml
+*.synced.yaml
+
+# Docker compose host mount for real config/secrets.
+/docker/config/
+
+# Local helper/smoke scripts with real fleet data (not shipped).
+scripts/*_live.py
+scripts/smoke_live_readonly.py
+scripts/test_mcp_stdio.py
+
+# Local environment for live integration tests.
+.env
+
+# Python caches
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/

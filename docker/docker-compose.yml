@@ -1,0 +1,33 @@
+# peplink-device-mcp over HTTP. Put your real config.yaml + secrets.yaml in ./config/
+# next to this file (gitignored), then: docker compose up --build
+#
+# secrets.yaml MUST contain at least one mcp_keys entry + its secret — the HTTP
+# transport fails closed without a key. Mint one: peplink-device-mcp keys generate.
+
+services:
+  peplink-device-mcp:
+    build:
+      context: ..
+      dockerfile: apps/device/Dockerfile
+    image: peplink-device-mcp
+    # Default CMD already runs: serve --transport http --host 0.0.0.0 --port 8080
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./config:/config:ro          # host ./config/{config.yaml,secrets.yaml} (read-only)
+    environment:
+      PEPLINK_MCP_CONFIG: /config/config.yaml
+      PEPLINK_MCP_SECRETS: /config/secrets.yaml
+      # Destructive ops are default-deny. Uncomment only what you want to allow:
+      # PEPLINK_POLICY_ALLOW_IC2_CONFIG_WRITE: "1"
+      # PEPLINK_POLICY_ALLOW_IC2_REBOOT: "1"
+      # PEPLINK_POLICY_ALLOW_SYSTEM_REBOOT: "1"
+    # IC2-only (cloud) works on the default bridge network. To reach devices on your
+    # LAN/mDNS directly, use host networking (Linux only) and drop the ports: mapping:
+    # network_mode: host
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

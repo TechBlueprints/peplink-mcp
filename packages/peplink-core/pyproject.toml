@@ -1,0 +1,24 @@
+[project]
+name = "peplink-core"
+version = "0.0.0"
+description = "Peplink device HTTP client, auth, and endpoint layer"
+requires-python = ">=3.12"
+dependencies = [
+    "httpx>=0.27",
+    "pydantic>=2.0",
+    "pysnmp>=6.1",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-asyncio>=0.24"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/peplink_core"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

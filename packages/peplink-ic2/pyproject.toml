@@ -1,0 +1,26 @@
+[project]
+name = "peplink-ic2"
+version = "0.0.0"
+description = "InControl 2 (Peplink cloud) OAuth2 client and endpoint layer"
+requires-python = ">=3.12"
+dependencies = [
+    "peplink-core",
+    "httpx>=0.27",
+    "pydantic>=2.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/peplink_ic2"]
+
+[tool.uv.sources]
+peplink-core = { workspace = true }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
