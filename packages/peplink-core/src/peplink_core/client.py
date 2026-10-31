@@ -182,6 +182,11 @@ class PeplinkDeviceClient:
 
         url = self._build_url(path, query) if auth else f"{self.base_url}{path}"
         headers = self._auth_headers() if auth else {"Content-Type": "application/json"}
+        if method.upper() != "GET":
+            # Routers (8.6.1) answer a write made with a login session with code 401 unless
+            # it carries the header the web admin sends, even for a login whose
+            # permission is {"GET": 1, "POST": 1}. Harmless for token auth and switches.
+            headers["X-Requested-With"] = "XMLHttpRequest"
 
         with self._client() as client:
             try:

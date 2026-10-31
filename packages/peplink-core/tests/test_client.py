@@ -156,3 +156,41 @@ def test_request_retries_transient_internal_error():
     result = client.ping()
     assert result["order"] == [1, 2]
     assert attempts["count"] == 2
+
+
+def test_userpass_write_sends_x_requested_with():
+    """Routers reject session-cookie POSTs (code 401) without X-Requested-With."""
+    from peplink_core.config import UserpassAuth
+
+    seen: dict[str, dict[str, str]] = {}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.url.path == "/api/login":
+            return httpx.Response(
+                200,
+                json={"stat": "ok", "response": {"permission": {"GET": 1, "POST": 1}}},
+                headers={"Set-Cookie": "bauth=session123; path=/"},
+            )
+        seen[f"{request.method} {request.url.path}"] = dict(request.headers)
+        if request.method == "POST" and request.headers.get("x-requested-with") != "XMLHttpRequest":
+            return httpx.Response(200, json={"stat": "fail", "code": 401, "message": "Unauthorized"})
+        return httpx.Response(200, json={"stat": "ok", "response": {"enable": False}})
+
+    transport = httpx.MockTransport(handler)
+    client = PeplinkDeviceClient(
+        "https://router.test",
+        UserpassAuth(username="admin", password="pw"),
+        "admin",
+        verify_tls=False,
+    )
+    client._client = lambda: httpx.Client(  # noqa: SLF001
+        transport=transport,
+        base_url="https://router.test",
+        verify=False,
+    )
+    client.request("GET", "/api/cmd.ap")
+    result = client.request("POST", "/api/cmd.ap", json_body={"enable": False})
+    assert result == {"enable": False}
+    assert seen["POST /api/cmd.ap"]["x-requested-with"] == "XMLHttpRequest"
+    assert seen["POST /api/cmd.ap"]["cookie"] == "bauth=session123"
+    assert "x-requested-with" not in seen["GET /api/cmd.ap"]

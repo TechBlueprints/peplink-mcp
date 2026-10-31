@@ -46,8 +46,11 @@ def assert_direct_write_allowed(device_id: str, device: DeviceConfig, *, api_pat
     gateway_hint = device.discover.via if device.discover and device.discover.via else "defaults.gateway_id"
     raise PeplinkConfigError(
         f"devices.{device_id} is management=gateway: write {api_path} on the device IP "
-        f"is not allowed. Use the gateway ({gateway_hint}) Switch Controller APIs such as "
-        "POST /api/config.port with the switch moduleType/moduleId/portId."
+        f"is not allowed; the gateway ({gateway_hint}) owns its configuration. A write made "
+        "on the switch itself answers ok but the controller keeps its own setting (seen for "
+        "PoE on SD Switch 1.3.2 under a MAX BR2 Pro 8.6.1), and no API addressing for an "
+        "adopted switch's ports was found on the gateway: change it in the gateway's Switch "
+        "Controller web UI."
     )
 
 

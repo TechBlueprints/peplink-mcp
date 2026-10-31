@@ -769,8 +769,9 @@ def create_server(
         """Get port configuration (read-only GET /api/config.port).
 
         On gateway-managed switches (management=gateway), reads the switch directly
-        when its IP is known. Switch Controller writes use the gateway with
-        moduleType/moduleId/portId — see POST /api/config.port on the gateway.
+        when its IP is known. Writes to such a switch's ports are not possible over
+        the API: the switch answers ok but the Switch Controller keeps its own
+        setting, and the gateway's config.port lists only its own ports (8.6.1).
         """
         handle, proxied_from = resolve_config_port_read_handle(ctx.registry, device_id)
         data = get_port_config(handle.read_client_for_path("/api/config.port"))

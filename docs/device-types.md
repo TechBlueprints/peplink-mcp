@@ -56,6 +56,12 @@ Recommended three-tier mapping for MCP / automation:
 
 Common gotchas on modern 8.x firmware:
 
+- **Writes over a login session need `X-Requested-With: XMLHttpRequest`.** A router (MAX BR1/BR2,
+  FusionHub on 8.6.1) answers every POST made with the `/api/login` cookie with
+  `{"stat": "fail", "code": 401}` unless the request carries that header, as the web admin's do,
+  even when the login reports `"permission": {"GET": 1, "POST": 1}` (a read-only login reports
+  `"POST": 0`). The client adds it to every non-GET request. SD switches accept POSTs either way.
+
 - `api.read-only` clients may get `401` on `GET /api/config.*` — provision a separate
   `config_read` client with the `api` scope.
 - Sending an explicit `scope` on `/api/auth.token.grant` can fail; rely on the client's
@@ -81,10 +87,22 @@ tiers work (`read_only` via a read-only account; `config_read`/`admin` via the a
 
 ## Switches (`kind: switch`)
 
-SD switches expose a partial REST API. When controller-managed (`management: gateway`), config
-writes (e.g. `POST /api/config.port`) go to the **gateway's** Switch Controller with the
-switch's module/port identifiers — not the switch IP. Reads may use the switch IP directly when
-its address is known. Switches usually authenticate with a userpass account.
+SD switches expose a partial REST API: `status.port` (link, VLAN mode, name and per-port PoE
+`{"enable", "power"}`, power only while PoE is on), the public `status.system.info` (model, CPU
+load, uptime, temperature; the CGI form is not answered) and `config.port`. Reads use the switch IP
+with a userpass account; a switch managed by a router's Switch Controller takes that router's
+logins, and its read-only login can still read `config.port` and `config.admin`.
+
+Writes on a controller-managed switch (`management: gateway`) are blocked on the switch IP, and for
+good reason: tested 2026-10-31 on SD Switch Rugged 1.3.2 under a MAX BR2 Pro 8.6.1, a PoE command
+sent to the switch answers `ok` (after ~10 s) but the controller keeps its own PoE setting. No API
+route through the gateway was found either: the gateway's `config.port` lists only its own front
+panel, and the `moduleType`/`moduleId` addressing in the 8.5.2 docs is for modular devices such as
+the EPX. Change a managed switch's ports in the gateway's Switch Controller web UI.
+
+PoE commands (`cmd.port.poe.enable` / `disable`) take port objects, `{"port": [{"id": 1}]}`: an SD
+switch rejects bare numbers (`Mandatory - id in port[0]`) and answers `ok` to a list of numbers
+without changing anything.
 
 ---
 

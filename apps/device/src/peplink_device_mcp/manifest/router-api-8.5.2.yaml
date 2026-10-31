@@ -144,6 +144,7 @@ endpoints:
     tier: admin
     tool: peplink_post_cmd_port_poe_disable
     device_kinds: [router, fusionhub, switch]
+    notes: 'Send port objects, e.g. {"port": [{"id": 1}]}. SD switches reject bare numbers ("Mandatory - id in port[0]") and answer ok to a list of numbers without changing anything. On a switch managed by a router''s Switch Controller the command answers ok (after ~10 s) but the controller keeps its own PoE setting; re-read status.port to confirm (verified 2026-10-31, SD Switch Rugged 1.3.2 under a MAX BR2 Pro 8.6.1).'
 
   - id: post_cmd_port_poe_enable
     method: POST
@@ -151,6 +152,7 @@ endpoints:
     tier: admin
     tool: peplink_post_cmd_port_poe_enable
     device_kinds: [router, fusionhub, switch]
+    notes: 'Send port objects, e.g. {"port": [{"id": 1}]}. SD switches reject bare numbers ("Mandatory - id in port[0]") and answer ok to a list of numbers without changing anything. On a switch managed by a router''s Switch Controller the command answers ok (after ~10 s) but the controller keeps its own PoE setting; re-read status.port to confirm (verified 2026-10-31, SD Switch Rugged 1.3.2 under a MAX BR2 Pro 8.6.1).'
 
   - id: post_cmd_sim_ussd_send
     method: POST
@@ -299,7 +301,7 @@ endpoints:
     tier: read_only
     tool: peplink_get_config_port
     device_kinds: [router, fusionhub, switch]
-    notes: Switch Controller managed switches are configured via gateway POST; GET works on gateway and switch.
+    notes: 'GET works on routers and SD switches (an SD switch''s read-only login can read it). On a MAX BR2 Pro 8.6.1 acting as Switch Controller the gateway lists only its own front panel, not the adopted SD switches'' ports (checked 2026-10-31).'
 
   - id: post_config_port
     method: POST
@@ -307,7 +309,7 @@ endpoints:
     tier: admin
     tool: peplink_post_config_port
     device_kinds: [router, fusionhub]
-    notes: Gateway Switch Controller port/VLAN writes use moduleType/moduleId/portId addressing.
+    notes: 'moduleType/moduleId addressing is for modular devices (e.g. EPX) per the 8.5.2 docs. No API addressing for a Switch Controller''s adopted SD switch ports was found on 8.6.1 (the gateway''s config.port lists only its own ports); change those in the gateway web UI.'
 
   - id: get_config_speedfusion_connect_protect
     method: GET
@@ -420,8 +422,8 @@ endpoints:
     path: /api/status.port
     tier: read_only
     tool: peplink_get_status_port
-    device_kinds: [router, fusionhub]
-    notes: Port link status on gateway/router; Switch Controller switch ports appear when adopted.
+    device_kinds: [router, fusionhub, switch]
+    notes: 'Port link status. SD switches answer it directly with per-port PoE ({"enable", "power"}; power only while PoE is on). A Switch Controller gateway (MAX BR2 Pro 8.6.1) lists only its own ports.'
 
   - id: get_status_pepvpn
     method: GET
